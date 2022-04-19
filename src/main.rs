@@ -1,13 +1,14 @@
-struct App {}
+mod app;
+mod server;
+mod connection;
+mod pipe;
 
-impl App {
-    fn run(&self) {
-        println!("Hello World!")
-    }
-}
+use app::App;
 
 fn main() {
-    let app = App{};
+    let app = App::new();
 
+    app.bootstrap();
     app.run();
+    app.teardown();
 }
