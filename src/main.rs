@@ -1,3 +1,13 @@
+struct App {}
+
+impl App {
+    fn run(&self) {
+        println!("Hello World!")
+    }
+}
+
 fn main() {
-    println!("Hello, world!");
+    let app = App{};
+
+    app.run();
 }
