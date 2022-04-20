@@ -2,13 +2,12 @@ mod app;
 mod server;
 mod connection;
 mod pipe;
+mod config;
 
 use app::App;
 
 fn main() {
-    let app = App::new();
+    let mut app = App::new();
 
-    app.bootstrap();
     app.run();
-    app.teardown();
 }
