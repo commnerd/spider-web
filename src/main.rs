@@ -1,8 +1,9 @@
 mod app;
-mod server;
+mod config;
 mod connection;
 mod pipe;
-mod config;
+mod server;
+mod thread;
 
 use app::App;
 

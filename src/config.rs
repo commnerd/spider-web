@@ -20,8 +20,4 @@ impl Config {
             .build()
             .unwrap()))
     }
-
-    pub fn get_int(&self, key: &str) {
-        self.get_int(key)
-    }
 }
