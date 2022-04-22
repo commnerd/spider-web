@@ -1,33 +1,32 @@
 use crate::server::Server;
-use crate::config::Config;
+use crate::config as config_crate;
 
-#[derive(Default)]
+use config::Config;
+
 pub struct App {
     config: Config,
-    server: Server,
+    server: Option<Server>,
 }
 
 impl App {
     pub fn new() -> App {
-        App::default()
+        App{
+            config: config_crate::load(),
+            server: None
+        }
     }
 
-    pub fn run(&mut self) {
+    pub fn run(&self) {
         self.bootstrap();
-        self.exec();
-        self.teardown();
     }
 
-    fn bootstrap(&mut self) {
-        self.config = Config::init();
-        self.server = Server::new(&self.config);
+    fn bootstrap(&self) -> Self {
+        App {
+            config: self.config.clone(),
+            server: Some(Server::new(self.config.clone())),
+        }
     }
 
-    fn exec(&self) {
-
-    }
-
-    fn teardown(&self) {
-        
+    fn exec(&'static self) {
     }
 }

@@ -1,17 +1,16 @@
 use crate::connection::Connection;
-use crate::config::Config;
+use config::Config;
 
-#[derive(Default)]
 pub struct Server {
-    upstream_connection: Connection,
-    downstream_connections: std::vec::Vec<Connection>,
+    config: Config,
+    connections: Vec<Connection>,
 }
 
-impl <'svr> Server {
-    pub fn new(conf: &Config) -> Server {
+impl Server {
+    pub fn new(conf: Config) -> Self {
         Server{
-            upstream_connection: Connection::new(),
-            downstream_connections: vec![],
+            config: conf,
+            connections: vec![],
         }
     }
 }
