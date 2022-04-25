@@ -16,8 +16,8 @@ impl App {
         }
     }
 
-    pub fn run(&self) {
-        self.bootstrap();
+    pub fn run<'app>(&'app self) {
+        self.bootstrap().exec();
     }
 
     fn bootstrap(&self) -> Self {
@@ -27,6 +27,16 @@ impl App {
         }
     }
 
-    fn exec(&'static self) {
+    fn exec(&self) {
+        let svr = self.server.clone();
+
+        match svr {
+            Some(server) => {
+                server.run()
+            },
+            None => {
+                println!("Woah!  Something went wrong!");
+            },
+        }
     }
 }

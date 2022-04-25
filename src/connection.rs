@@ -1,6 +1,6 @@
 use crate::pipe::Pipe;
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Connection {
     pipe: std::vec::Vec<Pipe>,
 }

@@ -1,4 +1,5 @@
 use crate::connection::Connection;
+use crate::thread::ThreadPool;
 use config::Config;
 use std::fs;
 use std::io::prelude::*;
@@ -6,8 +7,8 @@ use std::net::TcpListener;
 use std::net::TcpStream;
 use std::thread;
 use std::time::Duration;
-use thread::ThreadPool;
 
+#[derive(Clone)]
 pub struct Server {
     config: Config,
     connections: Vec<Connection>,
@@ -21,7 +22,7 @@ impl Server {
         }
     }
 
-    pub fn run(&self, config: Config) {
+    pub fn run(&self) {
         let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
         let pool = ThreadPool::new(4);
 
