@@ -23,14 +23,18 @@ impl Server {
     }
 
     pub fn run(&self) {
-        let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
-        let pool = ThreadPool::new(4);
+        let config = &self.config;
+        let port = format!("127.0.0.1:{}", config.get_int("port").unwrap());
+        let thread_count = config.get_int("threads").unwrap();
+        let listener = TcpListener::bind(port).unwrap();
+        let pool = ThreadPool::new(thread_count as usize);
 
         for stream in listener.incoming() {
+            let src_dir = config.get_string("src_dir").unwrap();
             let stream = stream.unwrap();
 
             pool.execute(|| {
-                handle_connection(stream);
+                handle_connection(stream, src_dir);
             });
         }
 
@@ -38,20 +42,21 @@ impl Server {
     }
 }
 
-fn handle_connection(mut stream: TcpStream) {
+fn handle_connection<'reply>(mut stream: TcpStream, src_dir: String) {
     let mut buffer = [0; 1024];
     stream.read(&mut buffer).unwrap();
+    
 
     let get = b"GET / HTTP/1.1\r\n";
     let sleep = b"GET /sleep HTTP/1.1\r\n";
 
     let (status_line, filename) = if buffer.starts_with(get) {
-        ("HTTP/1.1 200 OK", "hello.html")
+        ("HTTP/1.1 200 OK", format!("{}/{}", src_dir, "index.html"))
     } else if buffer.starts_with(sleep) {
         thread::sleep(Duration::from_secs(5));
-        ("HTTP/1.1 200 OK", "hello.html")
+        ("HTTP/1.1 200 OK", format!("{}/{}", src_dir, "index.html"))
     } else {
-        ("HTTP/1.1 404 NOT FOUND", "404.html")
+        ("HTTP/1.1 404 NOT FOUND", String::from("404.html"))
     };
 
     let contents = fs::read_to_string(filename).unwrap();

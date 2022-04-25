@@ -1,3 +1,4 @@
 env: test
 port: 7878
 threads: 1
+src_dir: ./public
