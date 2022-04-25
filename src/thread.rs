@@ -3,20 +3,9 @@ use std::sync::Arc;
 use std::sync::Mutex;
 use std::thread;
 
-struct SizedThreadPool {
+pub struct ThreadPool {
     workers: Vec<Worker>,
     sender: mpsc::Sender<Message>,
-}
-
-pub enum ThreadPool {
-    EmptyThreadPool,
-    ThreadPool(SizedThreadPool),
-}
-
-impl Default for ThreadPool {
-    fn default() -> Self {
-        ThreadPool::EmptyThreadPool
-    }
 }
 
 type Job = Box<dyn FnOnce() + Send + 'static>;
@@ -47,7 +36,7 @@ impl ThreadPool {
             workers.push(Worker::new(id, Arc::clone(&receiver)));
         }
 
-        ThreadPool::ThreadPool(SizedThreadPool { workers, sender })
+        ThreadPool { workers, sender }
     }
 
     pub fn execute<F>(&self, f: F)
@@ -56,10 +45,7 @@ impl ThreadPool {
     {
         let job = Box::new(f);
 
-        match &*self {
-            ThreadPool::ThreadPool(tp) => tp.sender.send(Message::NewJob(job)).unwrap(),
-            _ => (),
-        }
+        self.sender.send(Message::NewJob(job)).unwrap();
     }
 }
 
@@ -67,23 +53,18 @@ impl Drop for ThreadPool {
     fn drop(&mut self) {
         println!("Sending terminate message to all workers.");
 
-        match self {
-            ThreadPool::ThreadPool(tp) => {
-                for _ in &tp.workers {
-                    tp.sender.send(Message::Terminate).unwrap();
-                }
-        
-                println!("Shutting down all workers.");
-        
-                for worker in &tp.workers {
-                    println!("Shutting down worker {}", worker.id);
-        
-                    // if let Some(thread) = worker.thread {
-                    //     thread.join().unwrap();
-                    // }
-                }
-            },
-            _ => (),
+        for _ in &self.workers {
+            self.sender.send(Message::Terminate).unwrap();
+        }
+
+        println!("Shutting down all workers.");
+
+        for worker in &mut self.workers {
+            println!("Shutting down worker {}", worker.id);
+
+            if let Some(thread) = worker.thread.take() {
+                thread.join().unwrap();
+            }
         }
     }
 }
