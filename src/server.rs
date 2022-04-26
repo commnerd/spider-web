@@ -26,41 +26,41 @@ impl Server {
     pub fn run(&self) {
         let config = &self.config;
 
-        thread::spawn(|| runContainerd());
-        runWebServer(config);
+        self.runContainerd();
+        self.runWebServer();
         
         println!("Shutting down.");
     }
-}
 
-fn runContainerd() {
-    let output = if cfg!(target_os = "windows") {
-        Command::new("cmd")
-                .args(["/C", "echo hello"])
-                .output()
-                .expect("failed to execute process")
-    } else {
-        Command::new("sh")
-                .arg("-c")
-                .arg("dockerd")
-                .output()
-                .expect("failed to execute process")
-    };
-}
-
-fn runWebServer(config: &Config) {
-    let host = format!("127.0.0.1:{}", config.get_int("port").unwrap());
-    let thread_count = config.get_int("threads").unwrap();
-    let listener = TcpListener::bind(host).unwrap();
-    let pool = ThreadPool::new(thread_count as usize);
-
-    for stream in listener.incoming() {
-        let src_dir = config.get_string("src_dir").unwrap();
-        let stream = stream.unwrap();
-
-        pool.execute(|| {
-            handle_connection(stream, src_dir);
-        });
+    fn runContainerd(&self) {
+        let output = if cfg!(target_os = "windows") {
+            Command::new("cmd")
+                    .args(["/C", "dockerd", "--config", "./config/containerd.win"])
+                    .output()
+                    .expect("failed to execute process")
+        } else {
+            Command::new("sh")
+                    .args(["/C", "dockerd", "--config", "./config/containerd.lnx"])
+                    .output()
+                    .expect("failed to execute process")
+        };
+    }
+    
+    fn runWebServer(&self) {
+        let config = &self.config;
+        let host = format!("127.0.0.1:{}", config.get_int("port").unwrap());
+        let thread_count = config.get_int("threads").unwrap();
+        let listener = TcpListener::bind(host).unwrap();
+        let pool = ThreadPool::new(thread_count as usize);
+    
+        for stream in listener.incoming() {
+            let src_dir = config.get_string("src_dir").unwrap();
+            let stream = stream.unwrap();
+    
+            pool.execute(|| {
+                handle_connection(stream, src_dir);
+            });
+        }
     }
 }
 

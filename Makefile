@@ -1,10 +1,20 @@
+EXEC := "spider-web"
+EXC_PATH := "/etc/spiderweb"
+LIB_PATH := "/lib/spiderweb"
+VAR_PATH := "/var/lib/spiderweb"
+
 .PHONY: build
-build: build-spiderwebd build-containerd
-	@cp -fR config ./target/debug
+build: build-spiderwebd prep-dir-struct build-containerd
+	@cp -fR config ./target/debug${EXC_PATH}
+
+.PHONY: prep-dir-struct
+prep-dir-struct:
+	@mkdir -p ./target/debug${EXC_PATH}
+	@mkdir -p ./target/debug${VAR_PATH}/containerd/opt
 
 .PHONY: run
 run: build
-	./target/debug/spider-web
+	@./target/debug/${EXEC}
 
 .PHONY: check-submodules
 check-submodules:
@@ -13,7 +23,7 @@ check-submodules:
 		git submodule update --init --recursive;\
 	fi;
 
-.PHONY: build-spidewebd
+.PHONY: build-spidewebd check-submodules
 build-spiderwebd:
 	@cargo build
 
