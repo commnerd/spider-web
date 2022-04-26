@@ -9,6 +9,8 @@ pub fn load() -> Config {
         .add_source(config::File::with_name("config/default").required(false))
         // Add in `/etc/spiderweb/config`
         .add_source(config::File::with_name("/etc/spiderweb/config").required(false))
+        // Add in `./config`
+        .add_source(config::File::with_name("./config/default").required(false))
         .build()
         .unwrap()
 }
