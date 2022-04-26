@@ -1,0 +1,3 @@
+[submodule "go-tools/containerd"]
+	path = go-tools/containerd
+	url = https://github.com/containerd/containerd.git

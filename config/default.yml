@@ -1,0 +1,4 @@
+env: test
+port: 7878 // Ensure you have access to this port through your firewall(s)
+threads: 1
+src_dir: ./public

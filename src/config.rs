@@ -6,7 +6,7 @@ pub fn load() -> Config {
         // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
         .add_source(config::Environment::with_prefix("SW"))
         // Add in `config/config`
-        .add_source(config::File::with_name("config/global").required(false))
+        .add_source(config::File::with_name("config/default").required(false))
         // Add in `/etc/spiderweb/config`
         .add_source(config::File::with_name("/etc/spiderweb/config").required(false))
         .build()
