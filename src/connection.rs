@@ -2,7 +2,7 @@ use crate::pipe::Pipe;
 
 #[derive(Default, Clone)]
 pub struct Connection {
-    pipe: std::vec::Vec<Pipe>,
+    pipe: std::vec::Vec<Pipe<'static>>,
 }
 
 impl Connection {
