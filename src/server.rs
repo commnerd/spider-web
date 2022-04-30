@@ -1,26 +1,24 @@
+use crate::app::App;
 use crate::connection::Connection;
 use crate::web;
-use config::Config;
-use std::io::prelude::*;
-use std::net::TcpStream;
 use std::process::Command;
 
 #[derive(Clone)]
 pub struct Server {
-    config: Config,
+    app: App,
     connections: Vec<Connection>,
 }
 
 impl Server {
-    pub fn new(conf: Config) -> Self {
+    pub fn new(app: App) -> Self {
         Server{
-            config: conf,
+            app: app,
             connections: vec![],
         }
     }
 
     pub fn run(&self) {
-        let config = &self.config;
+        let config = &self.app.config;
 
         self.runWebServer();
         

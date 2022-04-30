@@ -12,7 +12,7 @@ mod web;
 use app::App;
 
 fn main() {
-    let app = App::new();
+    let mut app = App::new();
 
     app.run();
 }

@@ -3,9 +3,10 @@ use crate::config as config_crate;
 
 use config::Config;
 
+#[derive(Clone)]
 pub struct App {
-    config: Config,
-    server: Option<Server>,
+    pub config: Config,
+    server: Option<Box<Server>>,
 }
 
 impl App {
@@ -16,18 +17,18 @@ impl App {
         }
     }
 
-    pub fn run<'app>(&'app self) {
+    pub fn run(mut self) {
         self.bootstrap().exec();
     }
 
-    fn bootstrap(&self) -> Self {
+    fn bootstrap(self) -> Self {
         App {
             config: self.config.clone(),
-            server: Some(Server::new(self.config.clone())),
+            server: Some(Box::new(Server::new(self))),
         }
     }
 
-    fn exec(&self) {
+    fn exec(self) {
         let svr = self.server.clone();
 
         match svr {
