@@ -1,5 +1,6 @@
 use crate::app::App;
 use crate::connection::Connection;
+use crate::containerd;
 use crate::web;
 use std::process::Command;
 
@@ -26,17 +27,7 @@ impl Server {
     }
 
     fn runContainerd(&self) {
-        let output = if cfg!(target_os = "windows") {
-            Command::new("cmd")
-                    .args(["/C", "dockerd", "--config", "./config/containerd.win"])
-                    .output()
-                    .expect("failed to execute process")
-        } else {
-            Command::new("sh")
-                    .args(["/C", "dockerd", "--config", "./config/containerd.lnx"])
-                    .output()
-                    .expect("failed to execute process")
-        };
+        containerd::client::connect();
     }
     
     fn runWebServer(&self) {

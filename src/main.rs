@@ -5,6 +5,7 @@
 mod app;
 mod config;
 mod connection;
+mod containerd;
 mod pipe;
 mod server;
 mod web;
