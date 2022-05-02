@@ -40,6 +40,6 @@ impl Server {
     }
     
     fn runWebServer(&self) {
-        web::serve();
+        web::serve(&self.app);
     }
 }
