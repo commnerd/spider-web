@@ -3,6 +3,7 @@ use crate::connection::Connection;
 use crate::containerd;
 use crate::web;
 use std::process::Command;
+use std::thread;
 
 #[derive(Clone)]
 pub struct Server {
@@ -21,13 +22,16 @@ impl Server {
     pub fn run(&self) {
         let config = &self.app.config;
 
+        self.runContainerd();
         self.runWebServer();
         
         println!("Shutting down.");
     }
 
     fn runContainerd(&self) {
-        containerd::client::connect();
+        thread::spawn(|| {
+            containerd::client::connect();
+        });
     }
     
     fn runWebServer(&self) {

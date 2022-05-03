@@ -17,7 +17,7 @@ prep-dir-struct:
 
 .PHONY: run
 run: build
-	@${TGT_PATH}/${EXEC}
+	@sudo ${TGT_PATH}/${EXEC}
 
 .PHONY: check-submodules
 check-submodules:
