@@ -1,17 +1,17 @@
 version = 2
 
-root = "./var/lib/containerd"
-state = "./run/containerd"
+root = "ROOT/var/lib/containerd"
+state = "ROOT/run/containerd"
 oom_score = 0
-imports = ["./etc/containerd/runtime_*.toml"]
+imports = ["ROOT/etc/containerd/runtime_*.toml"]
 
 [grpc]
-  address = "./run/containerd/containerd.sock"
+  address = "ROOT/run/containerd/containerd.sock"
   uid = 0
   gid = 0
 
 [debug]
-  address = "./run/containerd/debug.sock"
+  address = "ROOT/run/containerd/debug.sock"
   uid = 0
   gid = 0
   level = "info"
