@@ -1,5 +1,6 @@
 use containerd_client::connect as containerd_connect;
 use std::sync::mpsc::{Sender, Receiver};
+use config::Config;
 
 /*
 pub enum Status {
@@ -12,17 +13,17 @@ pub enum Status {
 }
 */
 
-async fn test_connect() -> bool {
+async fn is_connected() -> bool {
     let channel = containerd_connect("/run/containerd/containerd.sock").await;
 
-    match channel {
-        Ok(ch) => {
-            println!("YAY")
+    return match channel {
+        Ok(_) => {
+            true
         },
-        Err(ch) => {
-            println!("Boo")
+        Err(_) => {
+            false
         }
-    }
+    };
     
     // let resp = channel.version(()).await?;
 
@@ -32,5 +33,9 @@ async fn test_connect() -> bool {
 }
 
 pub async fn connect() {
-    test_connect();
+    if is_connected().await {
+        println!("YAY");
+        return;
+    }
+    println!("BOO!");
 }
