@@ -1,4 +1,4 @@
-use crate::app::App;
+use config::Config;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -10,8 +10,9 @@ fn processes() -> &'static str {
     "This will list processes"
 }
 
-pub fn serve(app: &App) {
+pub fn serve(config: Config) {
     rocket::ignite()
+        .manage(config)
         .mount("/", routes![
             index,
             processes

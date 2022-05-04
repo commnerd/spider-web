@@ -6,7 +6,7 @@ use config::Config;
 #[derive(Clone)]
 pub struct App {
     pub config: Config,
-    server: Option<Box<Server>>,
+    server: Option<Server>,
 }
 
 impl App {
@@ -17,23 +17,25 @@ impl App {
         }
     }
 
-    pub fn run(mut self) {
-        self.bootstrap().exec();
+    pub fn run(self) {
+        let app = self.bootstrap();
+
+        app.exec();
     }
 
     fn bootstrap(self) -> Self {
-        App {
-            config: self.config.clone(),
-            server: Some(Box::new(Server::new(self))),
+        let config = &self.config;
+
+        App{
+            config: config.clone(),
+            server: Some(Server::new(config.clone()))
         }
     }
 
     fn exec(self) {
-        let svr = self.server.clone();
-
-        match svr {
+        match self.server {
             Some(server) => {
-                server.run()
+                server.run();
             },
             None => {
                 println!("Woah!  Something went wrong!");

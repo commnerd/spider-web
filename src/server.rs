@@ -1,4 +1,4 @@
-use crate::app::App;
+use config::Config;
 use crate::connection::Connection;
 use crate::containerd;
 use crate::web;
@@ -7,21 +7,19 @@ use std::thread;
 
 #[derive(Clone)]
 pub struct Server {
-    app: App,
+    config: Config,
     connections: Vec<Connection>,
 }
 
 impl Server {
-    pub fn new(app: App) -> Self {
+    pub fn new(config: Config) -> Self {
         Server{
-            app: app,
+            config: config,
             connections: vec![],
         }
     }
 
     pub fn run(&self) {
-        let config = &self.app.config;
-
         self.runContainerd();
         self.runWebServer();
         
@@ -35,6 +33,6 @@ impl Server {
     }
     
     fn runWebServer(&self) {
-        web::serve(&self.app);
+        web::serve(self.config.clone());
     }
 }
