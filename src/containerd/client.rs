@@ -32,7 +32,7 @@ async fn is_connected() -> bool {
     return true;
 }
 
-pub async fn connect() {
+pub async fn connect(config: Config) {
     if is_connected().await {
         println!("YAY");
         return;
