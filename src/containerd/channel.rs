@@ -25,7 +25,7 @@ impl Channel {
             Some(channel) => {
                 println!("We got a channel!");
             },
-            None => println!("Shit"),
+            None => println!("No channel to listen to"),
         }
     }
 }

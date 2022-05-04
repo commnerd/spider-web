@@ -1,5 +1,3 @@
-extern crate tonic;
-
 use config::Config;
 
 pub mod channel;
