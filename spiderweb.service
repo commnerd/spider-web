@@ -1,0 +1,24 @@
+[Unit]
+Description=Spiderweb Social AWS Engine
+Documentation=https://docs.docker.com
+After=containerd.socket network-online.target
+Requires=containerd.socket
+Wants=network-online.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/spiderwebd
+ExecReload=/bin/kill -s HUP $MAINPID
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+TimeoutStartSec=0
+Delegate=yes
+# kill only the spiderweb process, not all processes in the cgroup
+KillMode=process
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+
+[Install]
+WantedBy=multi-user.target

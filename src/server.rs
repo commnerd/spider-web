@@ -29,7 +29,7 @@ impl Server {
     fn runContainerd(&self) {
         let config = self.config.clone();
         thread::spawn(|| {
-            containerd::client::connect(config);
+            containerd::serve(config);
         });
     }
     
