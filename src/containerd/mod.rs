@@ -1,9 +1,8 @@
+pub mod server;
+
 use config::Config;
+use self::server::Server;
 
-pub mod channel;
-
-pub async fn serve(config: Config) {
-    let channel = channel::Channel::new(config).await;
-
-    channel.listen();
+pub async fn serve(config: Config) -> Server {
+    server::Server::new(config).await
 }

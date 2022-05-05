@@ -2,7 +2,6 @@ use config::Config;
 use crate::connection::Connection;
 use crate::containerd;
 use crate::web;
-use std::process::Command;
 use std::thread;
 
 #[derive(Clone)]
@@ -20,20 +19,20 @@ impl Server {
     }
 
     pub fn run(&self) {
-        self.runContainerd();
-        self.runWebServer();
+        self.run_containerd();
+        self.run_web_server();
         
         println!("Shutting down.");
     }
 
-    fn runContainerd(&self) {
+    fn run_containerd(&self) {
         let config = self.config.clone();
         thread::spawn(|| {
             containerd::serve(config);
         });
     }
     
-    fn runWebServer(&self) {
+    fn run_web_server(&self) {
         web::serve(self.config.clone());
     }
 }

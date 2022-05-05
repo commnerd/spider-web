@@ -1,31 +1,21 @@
 use containerd_client::connect;
-use std::sync::mpsc::{Sender, Receiver};
 use config::Config;
-use containerd_client::tonic::transport::{Error, channel::Channel as ContainerdChannel};
+use containerd_client::tonic::transport::channel::Channel as ContainerdChannel;
 
-pub struct Channel {
+pub struct Server {
     config: Config,
     channel: Option<ContainerdChannel>,
 }
 
-impl Channel {
+impl Server {
     pub async fn new(config: Config) -> Self {
         let channel_result = connect("/run/containerd/containerd.sock").await;
-        Channel{
+        Server{
             config: config,
             channel: match channel_result {
                 Ok(channel) => Some(channel),
                 Err(_) => None
             }
         }   
-    }
-
-    pub fn listen(&self) {
-        match &self.channel {
-            Some(channel) => {
-                println!("We got a channel!");
-            },
-            None => println!("No channel to listen to"),
-        }
     }
 }

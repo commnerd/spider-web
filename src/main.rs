@@ -3,6 +3,7 @@
 #[macro_use] extern crate rocket;
 
 mod app;
+mod channel;
 mod config;
 mod connection;
 mod containerd;
@@ -13,7 +14,7 @@ mod web;
 use app::App;
 
 fn main() {
-    let mut app = App::new();
+    let app = App::new();
 
     app.run();
 }
