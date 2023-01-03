@@ -1,3 +1,13 @@
+
+mod service_container;
+mod service;
+
+use service_container::ServiceContainer;
+use service::ExampleService;
+
 fn main() {
-    println!("Hello, world!");
+    let service_container = ServiceContainer::new();
+    service_container
+        .register(ExampleService{})
+        .run();
 }
