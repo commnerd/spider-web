@@ -1,6 +1,6 @@
 // use std::any::type_name;
-
-pub trait Service {
+use std::marker::{Sync, Send};
+pub trait Service: Sync + Send {
     fn type_name(&self) -> &'static str;
     fn run(&self);
 }
